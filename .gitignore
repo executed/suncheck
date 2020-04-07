@@ -1,0 +1,150 @@
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+/build/
+
+# Gradle
+# ------
+.gradle
+/build
+/buildSrc/build
+/buildSrc/subprojects/*/build
+/subprojects/*/build
+/subprojects/docs/src/samples/**/build
+/subprojects/internal-android-performance-testing/build-android-libs
+
+# IDEA
+# ----
+/target
+/.idea
+/.idea/*
+!/.idea/codeStyles
+!/.idea/inspectionProfiles
+*/**/.idea
+.shelf
+/*.iml
+/*.ipr
+/*.iws
+/buildSrc/.idea
+/buildSrc/.shelf
+/buildSrc/*.iml
+/buildSrc/*.ipr
+/buildSrc/*.iws
+/buildSrc/out
+/buildSrc/subprojects/*/*.iml
+/buildSrc/subprojects/*/out
+/out
+/subprojects/*/*.iml
+/subprojects/*/out
+/.teamcity/*.iml
+/.teamcity/target
+
+#Db properties
+/src/main/java/resources/dataSource.properties
+
+#ProjectFiles
+/src/main/java/resources/backup.sql
+
+# Eclipse
+# -------
+*.classpath
+*.project
+*.settings
+/bin
+/subprojects/*/bin
+atlassian-ide-plugin.xml
+.metadata/
+
+# NetBeans
+# --------
+.nb-gradle
+.nb-gradle-properties
+
+# Vim
+# ---
+*.sw[op]
+
+# Emacs
+# -----
+*~
+\#*\#
+.\#*
+
+# Textmate
+# --------
+.textmate
+
+# Sublime Text
+# ------------
+*.sublime-*
+
+# jEnv
+# ----
+.java-version
+
+# macOS
+# ----
+.DS_Store
+
+# HPROF
+# -----
+*.hprof
+
+# Work dirs
+# ---------
+/incoming-distributions
+/intTestHomeDir
+
+# Logs
+# ----
+/logs
+
+# oh-my-zsh gradle plugin
+.gradletasknamecache
+
+.gradle
+*.sw?
+.#*
+*#
+*~
+/build
+/code
+.classpath
+.project
+.settings
+bin
+build
+lib/
+target
+.springBeans
+interpolated*.xml
+dependency-reduced-pom.xml
+build.log
+_site/
+.*.md.html
+manifest.yml
+MANIFEST.MF
+settings.xml
+activemq-data
+overridedb.*
+*.iml
+.idea
+*.jar
+.mvn
+
