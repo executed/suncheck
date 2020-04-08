@@ -11,12 +11,15 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Locale;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,9 +35,13 @@ public class SunEventNotificationService {
     @Scheduled(cron = "${sunEventNotificationCheck.cron}")
     public void sendSunEventNotificationToUsers() {
         for (UserConfig userConfig : userConfigRepository.findAll()) {
-            String userZDTFormatted = LocalDateTime.now(ZoneId.of(userConfig.getTimezone()).getRules().getOffset(Instant.now()))
-                    .format(DateTimeFormatter.ofPattern(STR_CONSTANT.MESSAGE_TIME_FORMAT));
-            if (userConfig.getNextNotificationTime().equals(userZDTFormatted)) {
+            LocalDateTime userZDT = LocalDateTime.now(ZoneId.of(userConfig.getTimezone()).getRules().getOffset(Instant.now()));
+            Date userZonedDate = new Date();
+            userZonedDate.setHours(userZDT.getHour());
+            userZonedDate.setMinutes(userZDT.getMinute());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(STR_CONSTANT.MESSAGE_TIME_FORMAT, Locale.ENGLISH);
+
+            if (userConfig.getNextNotificationTime().equals(simpleDateFormat.format(userZonedDate))) {
                 StringBuilder msgText = new StringBuilder();
                 msgText.append((userConfig.getNextNotificationType().equals("sunrise")) ? STR_CONSTANT.SUNRISE_UNICODE : STR_CONSTANT.SUNSET_UNICODE)
                        .append(sunEventService.getSunEventTimeByUser(userConfig.getUser(), userConfig.getNextNotificationType()));
