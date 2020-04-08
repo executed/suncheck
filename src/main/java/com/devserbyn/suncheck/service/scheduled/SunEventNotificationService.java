@@ -11,7 +11,11 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import lombok.RequiredArgsConstructor;
@@ -27,10 +31,10 @@ public class SunEventNotificationService {
 
     @Scheduled(cron = "${sunEventNotificationCheck.cron}")
     public void sendSunEventNotificationToUsers() {
-        LocalDateTime currentTime = LocalDateTime.now();
-
         for (UserConfig userConfig : userConfigRepository.findAll()) {
-            if (userConfig.getNextNotificationTime().equals(currentTime.format(DateTimeFormatter.ofPattern(STR_CONSTANT.MESSAGE_TIME_FORMAT)))) {
+            String userZDTFormatted = LocalDateTime.now(ZoneId.of(userConfig.getTimezone()).getRules().getOffset(Instant.now()))
+                    .format(DateTimeFormatter.ofPattern(STR_CONSTANT.MESSAGE_TIME_FORMAT));
+            if (userConfig.getNextNotificationTime().equals(userZDTFormatted)) {
                 StringBuilder msgText = new StringBuilder();
                 msgText.append((userConfig.getNextNotificationType().equals("sunrise")) ? STR_CONSTANT.SUNRISE_UNICODE : STR_CONSTANT.SUNSET_UNICODE)
                        .append(sunEventService.getSunEventTimeByUser(userConfig.getUser(), userConfig.getNextNotificationType()));

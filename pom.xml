@@ -18,7 +18,7 @@
     <description>SunCheck - Take your time to feel the sunshine</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
         <javax.mail.ver>1.5.0-b01</javax.mail.ver>
         <jackson-core.ver>2.9.7</jackson-core.ver>
         <jackson-datatype-jsr310.ver>2.9.7</jackson-datatype-jsr310.ver>

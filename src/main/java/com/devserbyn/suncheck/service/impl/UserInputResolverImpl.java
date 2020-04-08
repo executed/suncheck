@@ -93,7 +93,7 @@ public class UserInputResolverImpl implements UserInputResolver {
     public String resolveLocation(Update update) {
         long curChatId = update.getMessage().getChatId();
         Optional<User> user = userRepositoryService.findByChatId(curChatId);
-        if (user.isEmpty()) {
+        if (!user.isPresent()) {
             return "Something went wrong";
         }
         for (UserConfig userConfig : userConfigRepository.findAll()) {
