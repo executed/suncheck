@@ -27,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -65,7 +66,12 @@ public class SunEventServiceImpl implements SunEventService {
         Instant instant = utcTime.toInstant(ZoneOffset.UTC);
         LocalTime localTime = instant.atZone(ZoneId.of(userConfig.getTimezone())).toLocalTime();
 
-        return String.format("%d:%d", localTime.getHour(), localTime.getMinute());
+        Date resultDate = new Date();
+        resultDate.setHours(localTime.getHour());
+        resultDate.setMinutes(localTime.getMinute());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(STR_CONSTANT.MESSAGE_TIME_FORMAT, Locale.ENGLISH);
+
+        return simpleDateFormat.format(resultDate);
     }
 
     /*
