@@ -1,9 +1,8 @@
 package com.devserbyn.suncheck.model;
 
+import com.devserbyn.suncheck.constant.STR_CONSTANT;
 import com.devserbyn.suncheck.controller.ApiController;
 
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,11 +13,9 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-@PropertySource("classpath:bot.properties")
 public class SuncheckBot extends TelegramLongPollingBot {
 
     private final ApiController apiController;
-    private final Environment environment;
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -28,12 +25,12 @@ public class SuncheckBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return environment.getProperty("bot.username");
+        return System.getenv().get(STR_CONSTANT.BOT_USERNAME);
     }
 
     @Override
     public String getBotToken() {
-        return environment.getProperty("bot.token");
+        return System.getenv().get(STR_CONSTANT.BOT_TOKEN);
     }
 
     public void sendResponse(Update update, String message) {

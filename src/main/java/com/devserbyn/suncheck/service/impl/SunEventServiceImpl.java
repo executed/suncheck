@@ -6,14 +6,17 @@ import com.devserbyn.suncheck.model.User;
 import com.devserbyn.suncheck.model.UserConfig;
 import com.devserbyn.suncheck.repository.UserConfigRepository;
 import com.devserbyn.suncheck.service.SunEventService;
+import com.devserbyn.suncheck.utility.DateUtility;
 import com.devserbyn.suncheck.utility.JsonReader;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONObject;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,7 +25,9 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -61,7 +66,12 @@ public class SunEventServiceImpl implements SunEventService {
         Instant instant = utcTime.toInstant(ZoneOffset.UTC);
         LocalTime localTime = instant.atZone(ZoneId.of(userConfig.getTimezone())).toLocalTime();
 
-        return localTime.format(DateTimeFormatter.ofPattern(STR_CONSTANT.MESSAGE_TIME_FORMAT));
+        Date resultDate = new Date();
+        resultDate.setHours(localTime.getHour());
+        resultDate.setMinutes(localTime.getMinute());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(STR_CONSTANT.MESSAGE_TIME_FORMAT, Locale.ENGLISH);
+
+        return simpleDateFormat.format(resultDate);
     }
 
     /*
@@ -74,29 +84,42 @@ public class SunEventServiceImpl implements SunEventService {
                 .findFirst().orElseThrow(RuntimeException::new);
 
         String nextSunEventType = (previousSunEventType.equals("sunrise")) ? "sunset" : "sunrise";
-        LocalTime nextSunEventTime = LocalTime.parse(this.getSunEventTimeByUser(curUser, nextSunEventType), DateTimeFormatter.ofPattern(STR_CONSTANT.MESSAGE_TIME_FORMAT));
+        Date nextSunEventDate = DateUtility.convertHoursAndMinToDate(this.getSunEventTimeByUser(curUser, nextSunEventType));
         LocalDateTime nextSunEventDateTime = LocalDateTime.now()
-                .withHour(nextSunEventTime.getHour())
-                .withMinute(nextSunEventTime.getMinute());
+                .withHour(nextSunEventDate.getHours())
+                .withMinute(nextSunEventDate.getMinutes());
         if (LocalDateTime.now().isAfter(nextSunEventDateTime)) {
             nextSunEventDateTime = nextSunEventDateTime.plusDays(1);
         }
         LocalDateTime nextNotificationTime = nextSunEventDateTime.minusMinutes(INTEGER_CONSTANT.MIN_BEFORE_SUNEVENT_NOTIF);
+        Date nextNotificationDate = Date.from(nextNotificationTime.atZone(ZoneId.systemDefault()).toInstant());
 
         curConfig.setNextNotificationType(nextSunEventType);
-        curConfig.setNextNotificationTime(nextNotificationTime.format(DateTimeFormatter.ofPattern(STR_CONSTANT.MESSAGE_TIME_FORMAT)));
+        curConfig.setNextNotificationTime(String.format("%d:%d", nextNotificationDate.getHours(), nextNotificationDate.getMinutes()));
         userConfigRepository.save(curConfig);
     }
 
     @Override
     public String getNearestSunEventType(User curUser) {
-        List<LocalTime> timeline = new ArrayList<>();
-        LocalTime now = LocalTime.now();
+        List<Date> timeline = new ArrayList<>();
+        Date now = new Date();
         timeline.add(now);
-        timeline.add(LocalTime.parse(this.getSunEventTimeByUser(curUser, "sunrise"), DateTimeFormatter.ofPattern(STR_CONSTANT.MESSAGE_TIME_FORMAT)));
-        timeline.add(LocalTime.parse(this.getSunEventTimeByUser(curUser, "sunset"), DateTimeFormatter.ofPattern(STR_CONSTANT.MESSAGE_TIME_FORMAT)));
+        String sunriseTime = this.getSunEventTimeByUser(curUser, "sunrise");
+        String sunsetTime = this.getSunEventTimeByUser(curUser, "sunset");
 
-        timeline.sort(LocalTime::compareTo);
+        DateFormat readFormat = new SimpleDateFormat(STR_CONSTANT.MESSAGE_TIME_FORMAT);
+        Date sunriseDate = null;
+        Date sunsetDate = null;
+        try {
+            sunriseDate = readFormat.parse(sunriseTime);
+            sunsetDate = readFormat.parse(sunsetTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        timeline.add(sunriseDate);
+        timeline.add(sunsetDate);
+
+        timeline.sort(Date::compareTo);
 
         return (timeline.indexOf(now) == 0 || timeline.indexOf(now) == 2) ? "sunrise" : "sunset";
     }
