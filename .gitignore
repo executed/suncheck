@@ -54,6 +54,7 @@
 /subprojects/*/out
 /.teamcity/*.iml
 /.teamcity/target
+catalina.home_IS_UNDEFINED
 
 #Db properties
 /src/main/java/resources/dataSource.properties
