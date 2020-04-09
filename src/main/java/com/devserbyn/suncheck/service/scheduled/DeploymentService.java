@@ -1,7 +1,8 @@
 package com.devserbyn.suncheck.service.scheduled;
 
+import com.devserbyn.suncheck.constant.STR_CONSTANT;
+
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -13,15 +14,16 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@PropertySource ("classpath:deployment.properties")
+@PropertySource("classpath:deployment.properties")
 public class DeploymentService {
-
-    private final Environment environment;
 
     @Scheduled(cron = "${deployment.preventScheduling.cronExp}")
     public void postponeSnoozeOnServer() throws IOException {
-        URL obj = new URL(environment.getProperty("deployment.preventScheduling.accessUrl"));
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        String serverURL = System.getenv().get(STR_CONSTANT.SERVER_URL_ENV_VAR);
+        if (serverURL == null) {
+            return;
+        }
+        HttpURLConnection con = (HttpURLConnection) new URL(serverURL).openConnection();
         con.setRequestMethod("GET");
         con.getResponseCode();
     }

@@ -3,8 +3,9 @@ package com.devserbyn.suncheck.constant;
 public final class STR_CONSTANT {
 
     // Config vars names
-    public static final String BOT_TOKEN = "BOT_TOKEN";
-    public static final String BOT_USERNAME = "BOT_USERNAME";
+    public static final String BOT_TOKEN_ENV_VAR = "BOT_TOKEN";
+    public static final String BOT_USERNAME_ENV_VAR = "BOT_USERNAME";
+    public static final String SERVER_URL_ENV_VAR = "SERVER_URL";
 
     public static final String SUNRISE_UNICODE = "\uD83C\uDF05";
     public static final String SUNSET_UNICODE = "\uD83C\uDF06";
