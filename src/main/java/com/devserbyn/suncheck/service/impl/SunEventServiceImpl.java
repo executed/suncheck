@@ -32,6 +32,9 @@ import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
+import static com.devserbyn.suncheck.constant.STR_CONSTANT.SUNRISE_EVENT_NAME;
+import static com.devserbyn.suncheck.constant.STR_CONSTANT.SUNSET_EVENT_NAME;
+
 @Service
 @RequiredArgsConstructor
 public class SunEventServiceImpl implements SunEventService {
@@ -83,7 +86,7 @@ public class SunEventServiceImpl implements SunEventService {
                 .filter(x -> curUser.getChatId() == x.getUser().getChatId())
                 .findFirst().orElseThrow(RuntimeException::new);
 
-        String nextSunEventType = (previousSunEventType.equals("sunrise")) ? "sunset" : "sunrise";
+        String nextSunEventType = (previousSunEventType.equals(SUNRISE_EVENT_NAME)) ? SUNSET_EVENT_NAME : SUNRISE_EVENT_NAME;
         Date nextSunEventDate = DateUtility.convertHoursAndMinToDate(this.getSunEventTimeByUser(curUser, nextSunEventType));
         LocalDateTime nextSunEventDateTime = LocalDateTime.now()
                 .withHour(nextSunEventDate.getHours())
@@ -95,7 +98,7 @@ public class SunEventServiceImpl implements SunEventService {
         Date nextNotificationDate = Date.from(nextNotificationTime.atZone(ZoneId.systemDefault()).toInstant());
 
         curConfig.setNextNotificationType(nextSunEventType);
-        curConfig.setNextNotificationTime(String.format("%d:%d", nextNotificationDate.getHours(), nextNotificationDate.getMinutes()));
+        curConfig.setNextNotificationTime(String.format("%tk:%tM", nextNotificationDate, nextNotificationDate));
         userConfigRepository.save(curConfig);
     }
 
