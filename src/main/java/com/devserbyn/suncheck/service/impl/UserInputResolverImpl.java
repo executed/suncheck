@@ -80,13 +80,20 @@ public class UserInputResolverImpl implements UserInputResolver {
                 }
                 return STR_CONSTANT.SUNSET_UNICODE + " " + sunEventService.getSunEventTimeByUser(userConfig.getUser(), "sunset");
             }
+            case "/removeme": {
+                userService.remove(update);
+                return "Your data was removed from our system";
+            }
+            case "/help": {
+                return "Available commands: /sunrise for sunrise time; /sunset for sunset time; /removeme for removing your data from system";
+            }
             default: return "Command wasn't recognized";
         }
     }
 
     @Override
     public String resolvePlainText(Update update) {
-        return null;
+        return "Suncheck understands commands only";
     }
 
     @Override
