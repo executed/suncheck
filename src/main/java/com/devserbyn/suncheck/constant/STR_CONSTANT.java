@@ -11,4 +11,7 @@ public final class STR_CONSTANT {
     public static final String SUNSET_UNICODE = "\uD83C\uDF06";
 
     public static final String MESSAGE_TIME_FORMAT = "H:mm";
+
+    public static final String SUNRISE_EVENT_NAME = "sunrise";
+    public static final String SUNSET_EVENT_NAME = "sunset";
 }
