@@ -10,12 +10,16 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class SuncheckBot extends TelegramLongPollingBot {
 
     private final ApiController apiController;
+
+    private boolean silentMessage = false;
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -34,22 +38,24 @@ public class SuncheckBot extends TelegramLongPollingBot {
     }
 
     public void sendResponse(Update update, String message) {
-        try {
-            SendMessage sendMessage = new SendMessage(update.getMessage().getChatId(), message);
-            sendMessage.enableMarkdown(true);
-            this.execute(sendMessage);
-        } catch (TelegramApiException e) {
-            System.out.println("damn");
-        }
+        this.sendResponse(update.getMessage().getChatId(), message);
     }
 
     public void sendResponse(long chatId, String message) {
         try {
             SendMessage sendMessage = new SendMessage(chatId, message);
             sendMessage.enableMarkdown(true);
+            sendMessage.enableNotification();
+            if (this.silentMessage) {
+                sendMessage.disableNotification();
+            }
             this.execute(sendMessage);
         } catch (TelegramApiException e) {
-            System.out.println("damn");
+            log.error("Something went wrong", e);
         }
+    }
+
+    public void setSilentMessage(boolean silentMessage) {
+        this.silentMessage = silentMessage;
     }
 }

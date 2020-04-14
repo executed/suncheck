@@ -1,5 +1,6 @@
 package com.devserbyn.suncheck.service.scheduled;
 
+import com.devserbyn.suncheck.constant.INTEGER_CONSTANT;
 import com.devserbyn.suncheck.constant.STR_CONSTANT;
 
 import org.springframework.context.annotation.PropertySource;
@@ -11,8 +12,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @PropertySource("classpath:deployment.properties")
 public class DeploymentService {
@@ -25,7 +28,11 @@ public class DeploymentService {
         }
         HttpURLConnection con = (HttpURLConnection) new URL(serverURL).openConnection();
         con.setRequestMethod("GET");
-        con.getResponseCode();
+        if (INTEGER_CONSTANT.SNOOZE_PREV_EXPECTED_RESP == con.getResponseCode()) {
+            log.debug("Application snooze prevention OK");
+        } else {
+            log.error("Application snooze prevention FAIL");
+        }
     }
 
 }
