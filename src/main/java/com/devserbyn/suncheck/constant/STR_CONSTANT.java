@@ -14,4 +14,8 @@ public final class STR_CONSTANT {
 
     public static final String SUNRISE_EVENT_NAME = "sunrise";
     public static final String SUNSET_EVENT_NAME = "sunset";
+
+    public static final String BOT_ANSWER_NEW_LINE_CHAR = "'/n'";
+
+    public static final String SUN_EVENT_API_URL_FORMAT = "https://api.sunrise-sunset.org/json?lat=%s&lng=%s";
 }
