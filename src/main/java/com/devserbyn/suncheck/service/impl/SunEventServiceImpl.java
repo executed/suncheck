@@ -31,16 +31,18 @@ import java.util.Locale;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 import static com.devserbyn.suncheck.constant.STR_CONSTANT.SUNRISE_EVENT_NAME;
 import static com.devserbyn.suncheck.constant.STR_CONSTANT.SUNSET_EVENT_NAME;
+import static com.devserbyn.suncheck.constant.STR_CONSTANT.SUN_EVENT_API_URL_FORMAT;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class SunEventServiceImpl implements SunEventService {
 
     private final UserConfigRepository userConfigRepository;
-
 
     @SneakyThrows
     @Override
@@ -55,11 +57,11 @@ public class SunEventServiceImpl implements SunEventService {
             throw new RuntimeException();
         }
         // Requesting API UTC sunrise time
-        StringBuilder apiURL = new StringBuilder("https://api.sunrise-sunset.org/json?");
-        apiURL.append("lat=").append(userConfig.getLatitude())
-              .append("&lng=").append(userConfig.getLongitude());
-
-        JSONObject json = JsonReader.readJsonFromUrl(apiURL.toString());
+        String urlWithParams = String.format(SUN_EVENT_API_URL_FORMAT, userConfig.getLatitude(), userConfig.getLongitude());
+        JSONObject json = JsonReader.readJsonFromUrl(urlWithParams);
+        if (json == null) {
+            throw new RuntimeException("Sun event API request returned no data");
+        }
         JsonNode root = new ObjectMapper().readTree(json.toString());
         String utcTimeString = root.get("results").get(event).asText();
 
@@ -107,8 +109,8 @@ public class SunEventServiceImpl implements SunEventService {
         List<Date> timeline = new ArrayList<>();
         Date now = new Date();
         timeline.add(now);
-        String sunriseTime = this.getSunEventTimeByUser(curUser, "sunrise");
-        String sunsetTime = this.getSunEventTimeByUser(curUser, "sunset");
+        String sunriseTime = this.getSunEventTimeByUser(curUser, SUNRISE_EVENT_NAME);
+        String sunsetTime = this.getSunEventTimeByUser(curUser, SUNSET_EVENT_NAME);
 
         DateFormat readFormat = new SimpleDateFormat(STR_CONSTANT.MESSAGE_TIME_FORMAT);
         Date sunriseDate = null;
@@ -124,6 +126,6 @@ public class SunEventServiceImpl implements SunEventService {
 
         timeline.sort(Date::compareTo);
 
-        return (timeline.indexOf(now) == 0 || timeline.indexOf(now) == 2) ? "sunrise" : "sunset";
+        return (timeline.indexOf(now) == 0 || timeline.indexOf(now) == 2) ? SUNRISE_EVENT_NAME : SUNSET_EVENT_NAME;
     }
 }

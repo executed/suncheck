@@ -10,8 +10,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class SuncheckBot extends TelegramLongPollingBot {
 
@@ -39,7 +41,7 @@ public class SuncheckBot extends TelegramLongPollingBot {
             sendMessage.enableMarkdown(true);
             this.execute(sendMessage);
         } catch (TelegramApiException e) {
-            System.out.println("damn");
+            log.error("Something went wrong", e);
         }
     }
 
@@ -49,7 +51,7 @@ public class SuncheckBot extends TelegramLongPollingBot {
             sendMessage.enableMarkdown(true);
             this.execute(sendMessage);
         } catch (TelegramApiException e) {
-            System.out.println("damn");
+            log.error("Something went wrong", e);
         }
     }
 }

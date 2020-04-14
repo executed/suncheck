@@ -1,5 +1,6 @@
 package com.devserbyn.suncheck.service.impl;
 
+import com.devserbyn.suncheck.constant.STR_CONSTANT;
 import com.devserbyn.suncheck.model.enums.TextResourceKeys;
 import com.devserbyn.suncheck.service.TextResourceService;
 
@@ -34,8 +35,12 @@ public class TextResourceServiceImpl implements TextResourceService {
                 .orElseThrow(() -> new RuntimeException(String.format("Text resource hasn't got a code: %s", textResourceKey.toString())));
         String textResource = Optional.ofNullable(cachedTextResources.getProperty(textResourceCode))
                                       .orElse(environment.getProperty(textResourceCode));
+        if (textResource == null) {
+            throw new RuntimeException(String.format("Text resource %s wasn't found", textResourceCode));
+        }
+        textResource = textResource.replaceAll(STR_CONSTANT.BOT_ANSWER_NEW_LINE_CHAR, System.lineSeparator());
 
-        return Optional.ofNullable(textResource).orElseThrow(() -> new RuntimeException(String.format("Text resource %s wasn't found", textResourceCode)));
+        return textResource;
     }
 
     @Override
