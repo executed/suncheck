@@ -42,7 +42,12 @@ public class SunEventNotificationService {
             if (userConfig.getNextNotificationTime().equals(simpleDateFormat.format(userZonedDate))) {
                 Long chatId = userConfig.getUser().getChatId();
                 String message = userCommandResolver.resolveSunEvent(chatId, userConfig.getNextNotificationType());
+                // disabling notification sound if it is sunrise
+                if (STR_CONSTANT.SUNRISE_EVENT_NAME.equals(userConfig.getNextNotificationType())) {
+                    suncheckBot.setSilentMessage(true);
+                }
                 suncheckBot.sendResponse(userConfig.getUser().getChatId(), message);
+                suncheckBot.setSilentMessage(false);
 
                 sunEventService.updateUserNextNotificationTime(userConfig.getUser(), userConfig.getNextNotificationType());
             }
