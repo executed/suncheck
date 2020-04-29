@@ -1,6 +1,7 @@
 package com.devserbyn.suncheck.listener;
 
 import com.devserbyn.suncheck.constant.PATH_CONSTANT;
+import com.devserbyn.suncheck.service.ApplicationService;
 import com.devserbyn.suncheck.service.TextResourceService;
 import com.devserbyn.suncheck.utility.ResourceUtil;
 
@@ -18,9 +19,11 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
 
     private final ResourceUtil resourceUtil;
     private final TextResourceService textResourceService;
+    private final ApplicationService applicationService;
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
+        applicationService.checkEnvVarsPresence();
         // Print banner saying bot initialized
         System.out.println(resourceUtil.readResourceFileLines(PATH_CONSTANT.BANNER_BOT_INIT));
         // Caching the text resources
