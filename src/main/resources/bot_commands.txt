@@ -1,0 +1,4 @@
+/sunrise - 🌄 Sunrise
+/sunset - 🌇 Sunset
+/removeme - 🚷 Clear your data
+/help - ℹ️ More info
