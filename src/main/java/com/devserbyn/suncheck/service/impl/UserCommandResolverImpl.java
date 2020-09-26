@@ -1,5 +1,6 @@
 package com.devserbyn.suncheck.service.impl;
 
+import com.devserbyn.suncheck.constant.PATH_CONSTANT;
 import com.devserbyn.suncheck.constant.STR_CONSTANT;
 import com.devserbyn.suncheck.model.UserConfig;
 import com.devserbyn.suncheck.model.UserSetupStepsBO;
@@ -10,6 +11,7 @@ import com.devserbyn.suncheck.service.SunEventService;
 import com.devserbyn.suncheck.service.TextResourceService;
 import com.devserbyn.suncheck.service.UserCommandResolver;
 import com.devserbyn.suncheck.service.UserService;
+import com.devserbyn.suncheck.utility.ResourceUtil;
 
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -42,6 +44,7 @@ public class UserCommandResolverImpl implements UserCommandResolver {
     private final UserConfigRepository userConfigRepository;
     private final SunEventService sunEventService;
     private final TextResourceService textResourceService;
+    private final ResourceUtil resourceUtil;
 
     @Override
     public String resolveStart(Update update) {
@@ -115,6 +118,7 @@ public class UserCommandResolverImpl implements UserCommandResolver {
 
     @Override
     public String resolveHelp(Update update) {
-        return textResourceService.get(TextResourceKeys.HELP_CMD);
+        return String.format(textResourceService.get(TextResourceKeys.HELP_CMD),
+                             resourceUtil.readResourceFileLines(PATH_CONSTANT.BOT_COMMANDS));
     }
 }
