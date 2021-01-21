@@ -22,7 +22,7 @@
         <javax.mail.ver>1.5.0-b01</javax.mail.ver>
         <jackson-core.ver>2.9.7</jackson-core.ver>
         <jackson-datatype-jsr310.ver>2.9.7</jackson-datatype-jsr310.ver>
-        <jackson-databind.ver>2.9.10.3</jackson-databind.ver>
+        <jackson-databind.ver>2.9.10.7</jackson-databind.ver>
         <logback-core.ver>1.2.3</logback-core.ver>
     </properties>
 
