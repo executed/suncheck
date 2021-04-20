@@ -40,12 +40,12 @@ public class SuncheckBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return System.getenv().get(STR_CONSTANT.BOT_USERNAME_ENV_VAR);
+        return "suncheck_beta_bot";
     }
 
     @Override
     public String getBotToken() {
-        return System.getenv().get(STR_CONSTANT.BOT_TOKEN_ENV_VAR);
+        return "1168931659:AAFiSRUKxof7I9YzEAc-dzelI-rA2fuR4a0";
     }
 
     public void sendResponse(long chatId, String message) {
