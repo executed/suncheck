@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 @Configuration
 @RequiredArgsConstructor
@@ -18,7 +19,7 @@ public class BotConfig {
     @SneakyThrows
     @Bean
     public TelegramBotsApi getTelegramBotsApi() {
-        TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
+        TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(bot);
         return telegramBotsApi;
     }

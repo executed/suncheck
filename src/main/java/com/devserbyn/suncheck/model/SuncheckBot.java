@@ -50,7 +50,7 @@ public class SuncheckBot extends TelegramLongPollingBot {
 
     public void sendResponse(long chatId, String message) {
         try {
-            SendMessage sendMessage = new SendMessage(chatId, message);
+            SendMessage sendMessage = new SendMessage(Long.toString(chatId), message);
             sendMessage.enableMarkdown(true);
             sendMessage.enableNotification();
             if (this.silentMessage) {
@@ -74,7 +74,7 @@ public class SuncheckBot extends TelegramLongPollingBot {
             botCommandList.add(new BotCommand(commandAndDesc[0], commandAndDesc[1]));
         });
         try {
-            this.execute(new SetMyCommands(botCommandList));
+            this.execute(new SetMyCommands(botCommandList, null, null));
             log.info("Bot commands were successfully set");
         } catch (TelegramApiException e) {
             botErrorHandler.handleSendingMessageException(1L, "setCommands", e);
